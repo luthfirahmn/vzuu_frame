@@ -41,8 +41,6 @@ var lang = localStorage.getItem('language');
 // }
 
 $(document).ready(function () {
-  // setActiveNavLink();
-  
   function updateButton(language) {
     var selectedItem = $('.lang-item[data-lang="' + language + '"]');
     if (selectedItem.length) {
@@ -57,7 +55,7 @@ $(document).ready(function () {
   }
 
   var activeLanguage = localStorage.getItem('language');
-  console.log(activeLanguage);
+  // console.log(activeLanguage);
   
   if (activeLanguage) {
       $('.lang-item').removeClass('active');
@@ -65,18 +63,7 @@ $(document).ready(function () {
       updateButton(activeLanguage);
   }
 
-  $(document).on("click", ".dropdown-item", function (event) {
-      event.preventDefault();
 
-      var selectedLanguage = $(this).data('lang');
-      localStorage.setItem('language', selectedLanguage);
-
-      $('.lang-item').removeClass('active');
-
-      $(this).addClass('active');
-
-      updateButton(selectedLanguage);
-  });
 
   var currentUrl = window.location.href;
   const clinicPage = ["clinic", "faq", "perawatan", "perawatan/detail"];
@@ -457,13 +444,13 @@ function loadFlag(lang) {
       </button>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
         <li>
-          <a class="dropdown-item ${lang === 'ID' ? 'active' : ''}" href="#" data-lang="ID">
+          <a class="dropdown-item lang-item ${lang === 'ID' ? 'active' : ''}" href="#" data-lang="ID">
             <img src="${getBaseUrl()}assets/frontend/img/ind.png" alt="ID" width="20" height="15">
             ID
           </a>
         </li>
         <li>
-          <a class="dropdown-item ${lang === 'EN' ? 'active' : ''}" href="#" data-lang="EN">
+          <a class="dropdown-item lang-item ${lang === 'EN' ? 'active' : ''}" href="#" data-lang="EN">
             <img src="${getBaseUrl()}assets/frontend/img/eng.png" alt="EN" width="20" height="15">
             EN
           </a>
@@ -474,3 +461,39 @@ function loadFlag(lang) {
 
   return flag;
 }
+
+$(document).ready(function () {
+  function updateButton(language) {
+      var selectedItem = $('.lang-item[data-lang="' + language + '"]');
+      if (selectedItem.length) {
+          var newImageSrc = selectedItem.find('img').attr('src');
+          var newAltText = selectedItem.find('img').attr('alt');
+
+          $('#languageDropdown')
+              .find('img')
+              .attr('src', newImageSrc)
+              .attr('alt', newAltText);
+      }
+  }
+
+  var activeLanguage = localStorage.getItem('activeLanguage');
+  if (activeLanguage) {
+      $('.lang-item').removeClass('active');
+      $('.lang-item[data-lang="' + activeLanguage + '"]').addClass('active');
+      updateButton(activeLanguage);
+  }
+
+  $('.lang-item').on('click', function (event) {
+      event.preventDefault();
+
+      var selectedLanguage = $(this).data('lang');
+
+      $('.lang-item').removeClass('active');
+
+      $(this).addClass('active');
+
+      localStorage.setItem('activeLanguage', selectedLanguage);
+
+      updateButton(selectedLanguage);
+  });
+});
